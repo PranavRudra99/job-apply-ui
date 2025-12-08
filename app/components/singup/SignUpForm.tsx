@@ -3,6 +3,7 @@ import { redirect } from 'react-router';
 import GoogleLogo from '../../../assets/google.svg';
 import AppleLogo from '../../../assets/apple.svg';
 import './SignUpForm.css'; // We will assume a similar CSS file structure
+import axios from 'axios';
 
 function SignUpForm() {
 
@@ -41,19 +42,17 @@ function SignUpForm() {
       alert("Error: Passwords do not match!");
       return;
     }
-
+    try{
+      const response = axios.post('http://localhost:8081/register', formData).then(response=>{
+        console.log("Registration successful:", response.data);
+        redirect('/login');
+      })
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
     // ⚠️ Real Registration Logic (e.g., API POST request)
-    console.log('Attempting registration with:', formData);
-    alert(`Registration successful for user: ${formData.username}`);
 
     // On successful signup, you might redirect to a welcome page or the login page
-    // redirect('/welcome'); 
-  };
-
-  // 4. Navigation to Login Page Handler
-  const handleLoginClick = (event) => {
-    event.preventDefault();
-    redirect('/login'); // Assuming '/login' is the route for your login page
   };
 
   return (
