@@ -1,8 +1,17 @@
 /* ---------------------------------
   1. Global and Container Styling
 ------------------------------------ */
+@media(min-width: 768px){
+    body{
+        background-color: #f4f7f6; /* Light, soft background */
+    }
+    .login-container{
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft, modern shadow */
+    }
+}
+
 body {
-    background-color: #f4f7f6; /* Light, soft background */
+    background-color: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,7 +24,6 @@ body {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft, modern shadow */
     width: 100%;
     max-width: 400px;
     text-align: center;
