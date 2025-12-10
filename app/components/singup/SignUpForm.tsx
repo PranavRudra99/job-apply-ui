@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { redirect } from 'react-router';
+import { useNavigate } from 'react-router';
 import { FormInput } from '~/components/common/inputs/FormInput';
 import { FederatedAuth } from '~/components/federated-auth/FederatedAuth';
 import { validateSignUpForm } from '~/utils/Utility';
@@ -47,7 +47,8 @@ const formFormat: FormFormat = {
 const formFieldOrder = ['firstName', 'lastName', 'userName', 'email', 'phoneNumber', 'password', 'confirmPassword'];
 
 function SignUpForm() {
-  const apiUrl = import.meta.env.REACT_APP_BACKEND_URL;
+  const apiUrl = import.meta.env.VITE_BASE_URL;
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormDataType>({
     firstName: '',
     lastName: '',
@@ -82,15 +83,15 @@ function SignUpForm() {
     alert(`Redirecting to ${provider} login...`);
   }
 
-  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if(validateSignUpForm({ formData, formFieldOrder, formFormat, errorMessage, setErrorMessage })){
-      const response = axios.post(apiUrl + '/register', formData).then(response=>{
+      const response = await axios.post(apiUrl + '/register', formData).then(response=>{
         console.log("Registration successful:", response.data);
+        navigate('/login');
       }).catch(error=>{
         console.error("Registration failed:", error);
       });
-      redirect('/login');
     }
   }
 

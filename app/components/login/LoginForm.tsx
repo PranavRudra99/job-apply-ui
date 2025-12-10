@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { redirect } from 'react-router';
+import { useNavigate } from 'react-router';
 import { FormInput } from '~/components/common/inputs/FormInput';
 import { FederatedAuth } from '../federated-auth/FederatedAuth';
 import { validateLoginForm } from '~/utils/Utility';
@@ -25,7 +25,8 @@ const formFieldOrder = ['userName', 'password'];
 
 
 function LoginForm() {
-  const apiUrl = import.meta.env.REACT_APP_BACKEND_URL;
+  const apiUrl = import.meta.env.VITE_BASE_URL;
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormDataType>({
     userName: '',
     password: ''
@@ -36,15 +37,16 @@ function LoginForm() {
     password: ''
   });
 
-  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if(validateLoginForm({ formData, formFieldOrder, formFormat, errorMessage, setErrorMessage })){
-      const response = axios.post(apiUrl + '/login', formData).then(response=>{
+      try {
+        const response = await axios.post(apiUrl + '/login', formData);
         console.log("Login successful:", response.data);
-      }).catch(error=>{
+        navigate('/register');
+      } catch (error) {
         console.error("Login failed:", error);
-      });
-      redirect('/register');
+      }
     }
   };
 
