@@ -1,25 +1,74 @@
 import React, { useState } from 'react';
 import { redirect } from 'react-router';
-import GoogleLogo from '../../../assets/google.svg';
-import AppleLogo from '../../../assets/apple.svg';
-import './SignUpForm.css'; // We will assume a similar CSS file structure
 import axios from 'axios';
+import { FormInput } from '~/components/common/inputs/FormInput';
+import { FederatedAuth } from '~/components/federated-auth/FederatedAuth';
+import './SignUpForm.css';
+
+const formFormat: FormFormat = {
+  firstName: {
+    label: 'First Name',
+    type: 'text',
+    required: true
+  },
+  lastName: {
+    label: 'Last Name',
+    type: 'text',
+    required: true
+  },
+  userName: {
+    label: 'User Name',
+    type: 'text',
+    required: true
+  },
+  email: {
+    label: 'Email',
+    type: 'email',
+    required: true
+  },
+  phoneNumber: {
+    label: 'Phone Number',
+    type: 'tel',
+    required: true
+  },
+  password: {
+    label: 'Password',
+    type: 'password',
+    required: true
+  },
+  confirmPassword: {
+    label: 'Confirm Password',
+    type: 'password',
+    required: true
+  }
+};
+
+const formFieldOrder = ['firstName', 'lastName', 'userName', 'email', 'phoneNumber', 'password', 'confirmPassword'];
 
 function SignUpForm() {
 
   // 1. State for all input fields
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataType>({
     firstName: '',
     lastName: '',
-    username: '',
+    userName: '',
     email: '',
     phoneNumber: '',
     password: '',
     confirmPassword: '',
   });
 
-  // 2. Generic handler to update state based on input 'name' attribute
-  const handleChange = (e) => {
+  const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({
+    firstName: '',
+    lastName: '',
+    userName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -27,155 +76,60 @@ function SignUpForm() {
     }));
   };
 
-  const handleSocialSignUp = (provider) => {
+  const handleSocialSignUp = (provider: string) => {
     // ⚠️ In a real app, this is where you'd redirect to Google/Apple's OAuth flow
     console.log(`Signing in with ${provider}...`);
     alert(`Redirecting to ${provider} login...`);
   };
 
   // 3. Form Submission Handler
-  const handleSignUp = (event) => {
+  const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Basic Validation Check
     if (formData.password !== formData.confirmPassword) {
-      alert("Error: Passwords do not match!");
-      return;
+      setErrorMessage({
+        ...errorMessage,
+        confirmPassword: 'Passwords do not match.'
+      })
     }
     try{
       const response = axios.post('http://localhost:8081/register', formData).then(response=>{
         console.log("Registration successful:", response.data);
-        redirect('/login');
       })
     } catch (error) {
       console.error("Registration failed:", error);
     }
-    // ⚠️ Real Registration Logic (e.g., API POST request)
-
-    // On successful signup, you might redirect to a welcome page or the login page
+    redirect('/login');
   };
 
   return (
     <div className="signup-container">
       <h1>Create Your Account</h1>
-
       <form onSubmit={handleSignUp} className="signup-form">
-        
-        {/* Row 1: First Name & Last Name */}
-        <div className="input-group">
-        <label htmlFor="firstName">First Name</label>
-        <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-        />
-        </div>
-        <div className="input-group">
-        <label htmlFor="lastName">Last Name</label>
-        <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-        />
-        </div>
-
-        {/* Row 2: Username & Email */}
-        <div className="input-group">
-        <label htmlFor="username">Username</label>
-        <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-        />
-        </div>
-        <div className="input-group">
-        <label htmlFor="email">Email</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-        />
-        </div>
-
-        {/* Row 3: Phone Number */}
-        <div className="input-group full-width">
-          <label htmlFor="phoneNumber">Phone Number</label>
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="input-group">
-        <label htmlFor="password">Password</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-        />
-        </div>
-        <div className="input-group">
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-        />
-        </div>
-
+        {
+          formFieldOrder.map(field=>{
+            return (<FormInput
+              key={field}
+              name={field}
+              label={formFormat[field].label}
+              type={formFormat[field].type}
+              value={formData[field]}
+              onChange={handleChange}
+              error={errorMessage[field]}
+              required={formFormat[field].required}
+            />)
+          })
+        }
         {/* Sign Up Button */}
         <button type="submit" className="signup-button">
           Sign Up
         </button>
       </form>
-
-      {/* --- Separator and Alternative Options --- */}
-      <div className="separator">
-        <p>OR</p>
-      </div>
-
-      {/* --- Social Login Buttons --- */}
-      <div className="social-signup">
-        <button 
-          className="google-button" 
-          onClick={() => handleSocialSignUp('Google')}
-        >
-          <div className="center">
-            <img className="logo-img" src={GoogleLogo} alt="Google Icon" />
-            <p>Sign up with Google</p>
-          </div>
-        </button>
-        <button 
-          className="apple-button" 
-          onClick={() => handleSocialSignUp('Apple')}
-        >
-          <div className="center">
-            <img className="logo-img" src={AppleLogo} alt="Apple Icon" />
-            <p>Sign up with Apple</p>
-          </div>
-          </button>
-      </div>
+      <FederatedAuth
+        handleFederatedAuth={handleSocialSignUp}
+        prefixText="Sign in with"
+      />
 
       {/* --- Signup Link/Button --- */}
       <div className="login-option">

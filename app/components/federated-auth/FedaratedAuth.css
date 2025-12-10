@@ -1,0 +1,76 @@
+
+
+.social-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.social-container button {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.social-container button:hover {
+    background-color: #f0f0f0;
+    border-color: #aaa;
+}
+
+
+.separator {
+    margin: 30px 0;
+    position: relative;
+    text-align: center;
+}
+
+.separator p {
+    display: inline-block;
+    background: #ffffff;
+    padding: 0 15px;
+    color: #999;
+    font-size: 14px;
+    position: relative;
+    z-index: 2;
+}
+
+.separator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+
+.google-button {
+    background-color: #fff;
+    color: #444;
+    border-color: #ddd;
+}
+
+.apple-button {
+    background-color: #000;
+    color: white;
+    border-color: #000;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    justify-content: center;
+}
+
+.logo-img{
+    width: 1.4em;
+}

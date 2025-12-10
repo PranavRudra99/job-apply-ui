@@ -1,0 +1,40 @@
+/* Container Style */
+.error-message {
+    /* Layout and Spacing */
+    padding: 15px 20px;
+    margin-bottom: 20px;
+
+    /* Visual Style */
+    background-color: #fcebeb; /* Light red/pink background */
+    border: 1px solid #dc3545; /* Standard red border */
+    border-radius: 4px; /* Slightly rounded corners */
+
+    /* Typography */
+    font-family: Arial, sans-serif;
+    color: #343a40; /* Darker text for readability */
+}
+
+/* Title/Heading Style */
+.error-message h3 {
+    /* Visual separation */
+    border-bottom: 1px solid #f8d7da; /* Lighter divider */
+    padding-bottom: 8px;
+    margin-top: 0;
+    margin-bottom: 10px;
+
+    /* Highlight the title */
+    color: #dc3545; /* Standard red for the title */
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* Action/Link Style (Optional) */
+.error-message a {
+    color: #007bff; /* Standard blue link color */
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.error-message a:hover {
+    text-decoration: underline;
+}

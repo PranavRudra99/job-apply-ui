@@ -1,20 +1,51 @@
 import React, { useState } from 'react';
-import GoogleLogo from '../../../assets/google.svg';
-import AppleLogo from '../../../assets/apple.svg';
-import './LoginForm.css'; // Assuming you have a CSS file for basic styling
+import './LoginForm.css';
+import { FormInput } from '~/components/common/inputs/FormInput';
+import { FederatedAuth } from '../federated-auth/FederatedAuth';
 
-function LoginForm() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleLogin = (event) => {
+const formFormat: FormFormat = {
+  userName: {
+    label: 'User Name',
+    type: 'text',
+    required: true
+  },
+  password: {
+    label: 'Password',
+    type: 'password',
+    required: true
+  }
+};
+
+const formFieldOrder = ['userName', 'password'];
+
+
+
+function LoginForm() {  
+  
+  const [formData, setFormData] = useState<FormDataType>({
+    userName: '',
+    password: ''
+  });
+
+  const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({
+    userName: '',
+    password: ''
+  });
+
+  const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // ⚠️ In a real app, this is where you'd send data to your backend API
-    console.log('Attempting login with:', username, password);
-    alert(`Login attempted for user: ${username}`);
   };
 
-  const handleSocialLogin = (provider) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSocialLogin = (provider: string) => {
     // ⚠️ In a real app, this is where you'd redirect to Google/Apple's OAuth flow
     console.log(`Signing in with ${provider}...`);
     alert(`Redirecting to ${provider} login...`);
@@ -26,60 +57,28 @@ function LoginForm() {
 
       {/* --- Standard Username/Password Form --- */}
       <form onSubmit={handleLogin} className="login-form">
-        <div className="input-group">
-          <label htmlFor="username">Username/Email</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
+        {
+          formFieldOrder.map(field=>{
+            return (<FormInput
+              key={field}
+              name={field}
+              label={formFormat[field].label}
+              type={formFormat[field].type}
+              value={formData[field]}
+              onChange={handleChange}
+              error={errorMessage[field]}
+              required={formFormat[field].required}
+            />)
+          })
+        }
         <button type="submit" className="login-button">
           Sign In
         </button>
       </form>
-
-      {/* --- Separator and Alternative Options --- */}
-      <div className="separator">
-        <p>OR</p>
-      </div>
-
-      {/* --- Social Login Buttons --- */}
-      <div className="social-login">
-        <button 
-          className="google-button" 
-          onClick={() => handleSocialLogin('Google')}
-        >
-          <div className="center">
-            <img className="logo-img" src={GoogleLogo} alt="Google Icon" />
-            <p>Sign in with Google</p>
-          </div>
-        </button>
-        <button 
-          className="apple-button" 
-          onClick={() => handleSocialLogin('Apple')}
-        >
-          <div className="center">
-            <img className="logo-img" src={AppleLogo} alt="Apple Icon" />
-            <p>Sign in with Apple</p>
-          </div>
-        </button>
-      </div>
-
+      <FederatedAuth
+        handleFederatedAuth={handleSocialLogin}
+        prefixText="Sign in with"
+      />
       {/* --- Signup Link/Button --- */}
       <div className="signup-option">
         <p>
