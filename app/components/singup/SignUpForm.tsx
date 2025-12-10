@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { redirect } from 'react-router';
-import axios from 'axios';
 import { FormInput } from '~/components/common/inputs/FormInput';
 import { FederatedAuth } from '~/components/federated-auth/FederatedAuth';
+import { validateSignUpForm } from '~/utils/Utility';
+import axios from 'axios';
 import './SignUpForm.css';
 
 const formFormat: FormFormat = {
@@ -39,15 +40,14 @@ const formFormat: FormFormat = {
   confirmPassword: {
     label: 'Confirm Password',
     type: 'password',
-    required: true
+    required: false
   }
 };
 
 const formFieldOrder = ['firstName', 'lastName', 'userName', 'email', 'phoneNumber', 'password', 'confirmPassword'];
 
 function SignUpForm() {
-
-  // 1. State for all input fields
+  const apiUrl = import.meta.env.REACT_APP_BACKEND_URL;
   const [formData, setFormData] = useState<FormDataType>({
     firstName: '',
     lastName: '',
@@ -80,28 +80,19 @@ function SignUpForm() {
     // ⚠️ In a real app, this is where you'd redirect to Google/Apple's OAuth flow
     console.log(`Signing in with ${provider}...`);
     alert(`Redirecting to ${provider} login...`);
-  };
+  }
 
-  // 3. Form Submission Handler
   const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // Basic Validation Check
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMessage({
-        ...errorMessage,
-        confirmPassword: 'Passwords do not match.'
-      })
-    }
-    try{
-      const response = axios.post('http://localhost:8081/register', formData).then(response=>{
+    if(validateSignUpForm({ formData, formFieldOrder, formFormat, errorMessage, setErrorMessage })){
+      const response = axios.post(apiUrl + '/register', formData).then(response=>{
         console.log("Registration successful:", response.data);
-      })
-    } catch (error) {
-      console.error("Registration failed:", error);
+      }).catch(error=>{
+        console.error("Registration failed:", error);
+      });
+      redirect('/login');
     }
-    redirect('/login');
-  };
+  }
 
   return (
     <div className="signup-container">
@@ -117,7 +108,6 @@ function SignUpForm() {
               value={formData[field]}
               onChange={handleChange}
               error={errorMessage[field]}
-              required={formFormat[field].required}
             />)
           })
         }

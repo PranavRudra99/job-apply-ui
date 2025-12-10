@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import './LoginForm.css';
+import { redirect } from 'react-router';
 import { FormInput } from '~/components/common/inputs/FormInput';
 import { FederatedAuth } from '../federated-auth/FederatedAuth';
+import { validateLoginForm } from '~/utils/Utility';
+import axios from 'axios';
+import './LoginForm.css';
 
 
 const formFormat: FormFormat = {
@@ -21,8 +24,8 @@ const formFieldOrder = ['userName', 'password'];
 
 
 
-function LoginForm() {  
-  
+function LoginForm() {
+  const apiUrl = import.meta.env.REACT_APP_BACKEND_URL;
   const [formData, setFormData] = useState<FormDataType>({
     userName: '',
     password: ''
@@ -35,6 +38,14 @@ function LoginForm() {
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if(validateLoginForm({ formData, formFieldOrder, formFormat, errorMessage, setErrorMessage })){
+      const response = axios.post(apiUrl + '/login', formData).then(response=>{
+        console.log("Login successful:", response.data);
+      }).catch(error=>{
+        console.error("Login failed:", error);
+      });
+      redirect('/register');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +78,6 @@ function LoginForm() {
               value={formData[field]}
               onChange={handleChange}
               error={errorMessage[field]}
-              required={formFormat[field].required}
             />)
           })
         }
