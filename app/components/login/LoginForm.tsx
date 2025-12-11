@@ -8,9 +8,9 @@ import './LoginForm.css';
 
 
 const formFormat: FormFormat = {
-  userName: {
-    label: 'User Name',
-    type: 'text',
+  credential: {
+    label: 'Email or Phone Number',
+    type: 'email | tel',
     required: true
   },
   password: {
@@ -20,7 +20,7 @@ const formFormat: FormFormat = {
   }
 };
 
-const formFieldOrder = ['userName', 'password'];
+const formFieldOrder = ['credential', 'password'];
 
 
 
@@ -28,12 +28,12 @@ function LoginForm() {
   const apiUrl = import.meta.env.VITE_BASE_URL;
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormDataType>({
-    userName: '',
+    credential: '',
     password: ''
   });
 
   const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({
-    userName: '',
+    credential: '',
     password: ''
   });
 

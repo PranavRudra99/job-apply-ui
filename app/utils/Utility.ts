@@ -11,14 +11,15 @@ export const isNotEmpty = (text: string) => {
 }
 
 export const validateSignUpForm = (request: ValidationRequestType): boolean => {
-    return validateRequiredFields(request) && validConfirmPassword(request);
+    return validateFields(request) 
+      && validConfirmPassword(request);
 }
 
 export const validateLoginForm = (request: ValidationRequestType): boolean => {
-    return validateRequiredFields(request);
+    return validateFields(request);
 }
 
-const validateRequiredFields = (request: ValidationRequestType): boolean => {
+const validateFields = (request: ValidationRequestType): boolean => {
     let count: number = 0;
     const newErrors: ErrorMessageType = { ...request.errorMessage };
     request.formFieldOrder.forEach(field=>{
@@ -29,9 +30,42 @@ const validateRequiredFields = (request: ValidationRequestType): boolean => {
       else{
         newErrors[field] = '';
       }
+      if(request.formFormat[field].type === 'email' && isNotEmpty(request.formData[field])){
+        if(!validEmail(request.formData[field])){
+          newErrors[field] = `Please enter a valid email address.`;
+          count++;
+        } else {
+          newErrors[field] = '';
+        }
+      }
+      if(request.formFormat[field].type === 'tel' && isNotEmpty(request.formData[field])){
+        if(!validPhoneNumber(request.formData[field])){
+          newErrors[field] = `Please enter a valid phone number.`;
+          count++;
+        } else {
+          newErrors[field] = '';
+        }
+      }
+      if(request.formFormat[field].type === 'email | tel' && isNotEmpty(request.formData[field])){
+        if(!validPhoneNumber(request.formData[field]) && !validEmail(request.formData[field])){
+          newErrors[field] = `Please enter a valid email address or phone number.`;
+        } else {
+          newErrors[field] = '';
+        }
+      }
     })
     request.setErrorMessage(newErrors);
     return count === 0;
+}
+
+const validEmail = (input: string): boolean => {
+    const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(input);
+}
+
+const validPhoneNumber = (input: string): boolean => {
+    const phoneRegex: RegExp = /(\(\d{3}\)\d{3}-\d{4}|\+\d{11})/;
+    return phoneRegex.test(input);
 }
 
 const validConfirmPassword = (request: ValidationRequestType): boolean => {

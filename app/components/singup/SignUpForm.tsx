@@ -17,11 +17,6 @@ const formFormat: FormFormat = {
     type: 'text',
     required: true
   },
-  userName: {
-    label: 'User Name',
-    type: 'text',
-    required: true
-  },
   email: {
     label: 'Email',
     type: 'email',
@@ -44,7 +39,7 @@ const formFormat: FormFormat = {
   }
 };
 
-const formFieldOrder = ['firstName', 'lastName', 'userName', 'email', 'phoneNumber', 'password', 'confirmPassword'];
+const formFieldOrder = ['firstName', 'lastName', 'email', 'phoneNumber', 'password', 'confirmPassword'];
 
 function SignUpForm() {
   const apiUrl = import.meta.env.VITE_BASE_URL;
@@ -52,7 +47,6 @@ function SignUpForm() {
   const [formData, setFormData] = useState<FormDataType>({
     firstName: '',
     lastName: '',
-    userName: '',
     email: '',
     phoneNumber: '',
     password: '',
@@ -62,7 +56,6 @@ function SignUpForm() {
   const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({
     firstName: '',
     lastName: '',
-    userName: '',
     email: '',
     phoneNumber: '',
     password: '',
