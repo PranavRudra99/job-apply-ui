@@ -10,7 +10,8 @@ import './LoginForm.css';
 const formFormat: FormFormat = {
   credential: {
     label: 'Email or Phone Number',
-    type: 'email | tel',
+    type: 'text',
+    validation: 'email | tel',
     required: true
   },
   password: {

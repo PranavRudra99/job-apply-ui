@@ -19,23 +19,26 @@ const formFormat: FormFormat = {
   },
   email: {
     label: 'Email',
-    type: 'email',
+    type: 'text',
+    validation: 'email',
     required: true
   },
   phoneNumber: {
     label: 'Phone Number',
     type: 'tel',
+    validation: 'tel',
     required: true
   },
   password: {
     label: 'Password',
     type: 'password',
+    validation: 'password',
     required: true
   },
   confirmPassword: {
     label: 'Confirm Password',
     type: 'password',
-    required: false
+    required: true
   }
 };
 

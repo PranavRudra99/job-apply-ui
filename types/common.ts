@@ -1,6 +1,7 @@
 interface FieldFormat {
     label: string,
     type: string,
+    validation?: string,
     required: boolean
 }
 

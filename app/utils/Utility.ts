@@ -30,7 +30,7 @@ const validateFields = (request: ValidationRequestType): boolean => {
       else{
         newErrors[field] = '';
       }
-      if(request.formFormat[field].type === 'email' && isNotEmpty(request.formData[field])){
+      if(request.formFormat[field].validation && request.formFormat[field].validation === 'email' && isNotEmpty(request.formData[field])){
         if(!validEmail(request.formData[field])){
           newErrors[field] = `Please enter a valid email address.`;
           count++;
@@ -38,7 +38,7 @@ const validateFields = (request: ValidationRequestType): boolean => {
           newErrors[field] = '';
         }
       }
-      if(request.formFormat[field].type === 'tel' && isNotEmpty(request.formData[field])){
+      if(request.formFormat[field].validation && request.formFormat[field].validation === 'tel' && isNotEmpty(request.formData[field])){
         if(!validPhoneNumber(request.formData[field])){
           newErrors[field] = `Please enter a valid phone number.`;
           count++;
@@ -46,9 +46,17 @@ const validateFields = (request: ValidationRequestType): boolean => {
           newErrors[field] = '';
         }
       }
-      if(request.formFormat[field].type === 'email | tel' && isNotEmpty(request.formData[field])){
+      if(request.formFormat[field].validation && request.formFormat[field].validation === 'email | tel' && isNotEmpty(request.formData[field])){
         if(!validPhoneNumber(request.formData[field]) && !validEmail(request.formData[field])){
           newErrors[field] = `Please enter a valid email address or phone number.`;
+        } else {
+          newErrors[field] = '';
+        }
+      }
+      if(request.formFormat[field].validation && request.formFormat[field].validation === 'password' && isNotEmpty(request.formData[field])){
+        if(!validPassword(request.formData[field])){
+          newErrors[field] = `Password must be at least 10 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.`;
+          count++;
         } else {
           newErrors[field] = '';
         }
@@ -58,13 +66,19 @@ const validateFields = (request: ValidationRequestType): boolean => {
     return count === 0;
 }
 
+const validPassword = (input: string): boolean => {
+    const passwordRegex: RegExp = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{10,}$/;
+    console.log(passwordRegex.test(input));
+    return passwordRegex.test(input);
+}
+
 const validEmail = (input: string): boolean => {
     const emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(input);
 }
 
 const validPhoneNumber = (input: string): boolean => {
-    const phoneRegex: RegExp = /(\(\d{3}\)\d{3}-\d{4}|\+\d{11})/;
+    const phoneRegex: RegExp = /(?:\d{1}-?\s?)?\(?(\d{3})\)?-?\s?(\d{3})-?\s?(\d{4})/;
     return phoneRegex.test(input);
 }
 
