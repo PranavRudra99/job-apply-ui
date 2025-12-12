@@ -32,3 +32,8 @@
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
+
+.required-label::after {
+  content: " *"; /* Add an asterisk after the label */
+  color: red;   /* Make it red */
+}

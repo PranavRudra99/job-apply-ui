@@ -21,7 +21,7 @@ export const FormInput = (props: FormInputProps) => {
     return (
         <div className="input-group">
             {props.error && <ErrorMessage text={props.error}/>}
-            <label htmlFor={props.name}>{props.label}</label>
+            <label htmlFor={props.name} className={props.required?'required-label':''}>{props.label}</label>
             <input
                 type={props.type}
                 id={props.name}
