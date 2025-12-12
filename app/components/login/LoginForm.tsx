@@ -2,62 +2,45 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { FormInput } from '~/components/common/inputs/FormInput';
 import { FederatedAuth } from '../federated-auth/FederatedAuth';
-import { validateLoginForm } from '~/utils/Utility';
 import axios from 'axios';
 import './LoginForm.css';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 
-
-const formFormat: FormFormat = {
-  credential: {
-    label: 'Email or Phone Number',
-    type: 'text',
-    validation: 'email | tel',
-    required: true
-  },
-  password: {
-    label: 'Password',
-    type: 'password',
-    required: true
-  }
-};
-
-const formFieldOrder = ['credential', 'password'];
-
-
+const formFieldOrder = ['email', 'password'];
 
 function LoginForm() {
   const apiUrl = import.meta.env.VITE_BASE_URL;
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FormDataType>({
-    credential: '',
-    password: ''
-  });
 
-  const [errorMessage, setErrorMessage] = useState<ErrorMessageType>({
-    credential: '',
-    password: ''
-  });
+  const {
+    register,
+    handleSubmit,
+  } = useForm<FormDataType>();
 
-  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if(validateLoginForm({ formData, formFieldOrder, formFormat, errorMessage, setErrorMessage })){
-      try {
-        const response = await axios.post(apiUrl + '/login', formData);
-        console.log("Login successful:", response.data);
-        navigate('/register');
-      } catch (error) {
-        console.error("Login failed:", error);
-      }
+  const formFormat: FormFormat = {
+    email: {
+      label: 'Email',
+      type: 'text',
+      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      required: true
+    },
+    password: {
+      label: 'Password',
+      type: 'password',
+      required: true
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const onSubmit: SubmitHandler<FormDataType> = (data) => {
+    if(true){//replace with validation logic if needed
+      const response = axios.post(apiUrl + '/login', data).then(response=>{
+        console.log("Login successful:", response.data);
+        navigate('/register');
+      }).catch(error=>{
+        console.error("Login failed:", error);
+      });
+    }
+  }
 
   const handleSocialLogin = (provider: string) => {
     // ⚠️ In a real app, this is where you'd redirect to Google/Apple's OAuth flow
@@ -70,7 +53,7 @@ function LoginForm() {
       <h1>Welcome Back!</h1>
 
       {/* --- Standard Username/Password Form --- */}
-      <form onSubmit={handleLogin} className="login-form">
+      <form onSubmit={handleSubmit(onSubmit)} className="login-form">
         {
           formFieldOrder.map(field=>{
             return (<FormInput
@@ -78,9 +61,11 @@ function LoginForm() {
               name={field}
               label={formFormat[field].label}
               type={formFormat[field].type}
-              value={formData[field]}
-              onChange={handleChange}
-              error={errorMessage[field]}
+              required={formFormat[field].required}
+              validate={formFormat[field].validate}
+              minLength={formFormat[field].minLength}
+              maxLength={formFormat[field].maxLength}
+              register={register}
             />)
           })
         }

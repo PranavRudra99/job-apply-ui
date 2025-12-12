@@ -1,8 +1,12 @@
 interface FieldFormat {
-    label: string,
-    type: string,
-    validation?: string,
-    required: boolean
+    label: string
+    type: string
+    validate?: (value: string) => string
+    minLength?: number
+    maxLength?: number
+    pattern?: RegExp
+    required: boolean,
+    customValidationMessage?: string
 }
 
 interface FormFormat {
