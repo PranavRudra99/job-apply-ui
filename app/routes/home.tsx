@@ -1,13 +1,7 @@
-import { redirect } from "react-router";
-import type { Route } from "./+types/home";
-
-export async function clientLoader({ request }: Route.ClientActionArgs) {
-  return redirect("/login");
-};
+import HomePage from "~/components/home/HomePage";
 
 export default function Home() {
     return (
-        <>
-        </>
+        <HomePage />
     )
 }

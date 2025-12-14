@@ -1,0 +1,23 @@
+.logo-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;;
+}
+
+.apply-text{
+    color: #1A237E;
+    font-size: 1rem;
+}
+
+.once-text{
+    color: #26C6DA;
+}
+
+.logo-img{
+    width: 3.5em;
+}

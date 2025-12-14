@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { FormInput } from '~/components/common/inputs/FormInput';
 import { FederatedAuth } from '../federated-auth/FederatedAuth';
@@ -35,7 +34,7 @@ function LoginForm() {
     if(true){//replace with validation logic if needed
       const response = axios.post(apiUrl + '/login', data).then(response=>{
         console.log("Login successful:", response.data);
-        navigate('/register');
+        navigate('/home');
       }).catch(error=>{
         console.error("Login failed:", error);
       });
