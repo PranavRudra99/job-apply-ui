@@ -17,7 +17,6 @@ interface FormInputProps {
 }
 
 export const FormInput = (props: FormInputProps) => {
-    console.log(props)
     return (
         <div className="input-group">
             {props.error && <ErrorMessage text={props.error}/>}

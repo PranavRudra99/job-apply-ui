@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Menu, X, Briefcase, Users, MessageSquare, Bell } from 'lucide-react'; 
-import ApplyOnceLogo from '~/../assets/apply-once.png';
+import { Menu, X, Briefcase, Users, MessageSquare, Bell } from 'lucide-react';
 import "./navbar.css";
+import { Logo } from './logo';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,33 +15,26 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          
-          {/* --- Logo/Brand Section --- */}
-          <div className="flex-shrink-0">
-            <a href="/" className="text-2xl font-bold logo-container">
-                <div>
-                    <img className="h-16" src={ApplyOnceLogo} alt="Apply Once Logo" />
-                </div>
-                <div className="center">
-                    <p className='apply-text'>Apply <span className='once-text'>Once</span></p>
-                </div>
-            </a>
-          </div>
-
+          <Logo />
           {/* --- Desktop Navigation Links --- */}
-          <div className="hidden md:flex space-x-8">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out flex items-center group"
-              >
-                <item.icon className="w-5 h-5 mr-1 text-gray-400 group-hover:text-indigo-600" />
-                {item.name}
-              </a>
-            ))}
+          <div className="h-16">
+            <div className="hidden md:flex space-x-8 h-16">
+              {navItems.map((item) => (
+                <div className="nav-item group">
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="px-3 py-2 rounded-md text-sm font-medium flex items-center mt-[1em] group-hover:text-indigo-600"
+                  >
+                    <item.icon className="w-5 h-5 mr-1 text-gray-400 group-hover:text-indigo-600" />
+                    {item.name}
+                  </a>
+                  <div className="divider-line bg-gray-600 group-hover:bg-indigo-600"></div>
+                </div>
+              ))}
+            </div>
           </div>
           
           {/* --- User/Avatar Section (Optional but modern) --- */}

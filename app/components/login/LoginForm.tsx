@@ -31,7 +31,7 @@ function LoginForm() {
   };
 
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
-    if(true){//replace with validation logic if needed
+    if(true){
       const response = axios.post(apiUrl + '/login', data).then(response=>{
         console.log("Login successful:", response.data);
         navigate('/home');
