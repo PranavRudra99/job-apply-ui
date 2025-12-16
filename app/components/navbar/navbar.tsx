@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { Menu, X, Briefcase, Users, MessageSquare, Bell } from 'lucide-react';
+import { useNavigate } from "react-router";
+import { Menu, X, Briefcase, Users, MessageSquare, Bell, Home } from 'lucide-react';
 import "./navbar.css";
 import { Logo } from './logo';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [selectedItem, setSelectedItem] = useState('Home');
   const navItems = [
-    { name: 'Jobs', icon: Briefcase, href: '/jobs' },
-    { name: 'Network', icon: Users, href: '/network' },
-    { name: 'Messages', icon: MessageSquare, href: '/messages' },
-    { name: 'Notifications', icon: Bell, href: '/notifications' },
+    { name: 'Home', icon: Home, href: '/home'},
+    { name: 'Jobs', icon: Briefcase, href: '/jobs'},
+    { name: 'Network', icon: Users, href: '/network'},
+    { name: 'Messages', icon: MessageSquare, href: '/messages'},
+    { name: 'Notifications', icon: Bell, href: '/notifications'},
   ];
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
@@ -22,16 +25,20 @@ const Navbar = () => {
           <div className="h-16">
             <div className="hidden md:flex space-x-8 h-16">
               {navItems.map((item) => (
-                <div className="nav-item group">
+                <div  className={`nav-item group ${item.name === selectedItem ? 'nav-item-active' : 'nav-item-inactive'}`}
+                  onClick = {()=>{
+                    setSelectedItem(item.name);
+                    navigate(item.href);
+                  }}
+                >
                   <a
                     key={item.name}
-                    href={item.href}
-                    className="px-3 py-2 rounded-md text-sm font-medium flex items-center mt-[1em] group-hover:text-indigo-600"
+                    className="px-3 py-2 rounded-md text-sm font-medium flex items-center mt-[1em]"
                   >
-                    <item.icon className="w-5 h-5 mr-1 text-gray-400 group-hover:text-indigo-600" />
+                    <item.icon className="w-5 h-5 mr-1" />
                     {item.name}
                   </a>
-                  <div className="divider-line bg-gray-600 group-hover:bg-indigo-600"></div>
+                  <div className={`divider-line ${item.name === selectedItem ? 'divider-active' : 'divider-inactive'}`}></div>
                 </div>
               ))}
             </div>
