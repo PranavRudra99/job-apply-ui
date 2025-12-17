@@ -31,14 +31,15 @@ const Navbar = () => {
                     navigate(item.href);
                   }}
                 >
+                  <div className="upper-divider-line"></div>
                   <a
                     key={item.name}
-                    className="px-3 py-2 rounded-md text-sm font-medium flex items-center mt-[1em]"
+                    className="px-3 py-2 rounded-md text-sm font-medium flex items-center main-content"
                   >
                     <item.icon className="w-5 h-5 mr-1" />
                     {item.name}
                   </a>
-                  <div className={`divider-line ${item.name === selectedItem ? 'divider-active' : 'divider-inactive'}`}></div>
+                  <div className="divider-line"></div>
                 </div>
               ))}
             </div>

@@ -4,6 +4,7 @@ import { FederatedAuth } from '../federated-auth/FederatedAuth';
 import axios from 'axios';
 import './LoginForm.css';
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useLogin } from '~/state/UseLogin';
 
 const formFieldOrder = ['email', 'password'];
 
@@ -33,7 +34,7 @@ function LoginForm() {
   const onSubmit: SubmitHandler<FormDataType> = (data) => {
     if(true){
       const response = axios.post(apiUrl + '/login', data).then(response=>{
-        console.log("Login successful:", response.data);
+        useLogin.setState({ userId: response.data.userId??'test' });
         navigate('/home');
       }).catch(error=>{
         console.error("Login failed:", error);
